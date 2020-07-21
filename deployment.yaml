@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: otus-dz1-deployment
+spec:
+    replicas: 2
+    selector:
+       matchLabels:
+          app: otus-dz1-app
+    template:
+       metadata:
+          labels:
+             app: otus-dz1-app
+       spec:
+          containers:
+          - name: otus-dz1-py
+            image: mobikop/otus-dz1-py:v1
+            ports:
+              - name: web
+                containerPort: 8000
+            livenessProbe:
+              httpGet:
+                port: 8000
+                path: /
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              timeoutSeconds: 2
+            readinessProbe:
+              httpGet:
+                port: 8000
+                path: /health
+              initialDelaySeconds: 10
+              periodSeconds: 5
